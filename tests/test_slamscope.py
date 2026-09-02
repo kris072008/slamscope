@@ -419,3 +419,22 @@ class TestSimulation:
             if -1 <= p.pose.x <= width + 1 and -1 <= p.pose.y <= height + 1
         )
         assert inside == len(sim.pf.particles)
+
+    def test_sensor_model_does_not_collapse_ess(self):
+        """Regression guard for an overconfident sensor model.
+
+        Simulation used to build its ParticleFilter with SensorModel(temperature=1.0),
+        overriding the class's own tempering default (6.0) and letting adjacent lidar
+        beams double-count the same wall. That collapsed effective sample size to a
+        handful of particles almost every update, papered over by resampling on
+        70-90% of steps -- final position error still looked fine, so only an assert
+        on ESS/resample-rate through the actual Simulation construction path catches
+        it. See SensorModel's docstring for the measured pathology.
+        """
+        sim = Simulation(Config(environment="office", particles=600, seed=1))
+        ess_values = []
+        for _ in range(300):
+            sim.step()
+            ess_values.append(sim.pf.ess)
+        assert min(ess_values) > sim.config.particles * 0.05
+        assert sim.pf.resamples < 300 * 0.5
