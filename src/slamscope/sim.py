@@ -49,7 +49,7 @@ class Simulation:
             lidar=self.lidar,
             count=self.config.particles,
             noise=MotionNoise(),
-            sensor=SensorModel(temperature=1.0),
+            sensor=SensorModel(),
         )
         if self.config.global_localization:
             self.pf.initialise_uniform(self.world)
