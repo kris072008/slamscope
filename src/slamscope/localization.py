@@ -219,6 +219,8 @@ class ParticleFilter:
 
     def update(self, scan: list[float]) -> None:
         """Reweight every particle by how well it explains the scan."""
+        if not self.particles:
+            return
         angles = self.lidar.angles()
         max_range = self.lidar.spec.max_range
 

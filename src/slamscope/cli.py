@@ -12,6 +12,13 @@ from .environments import ENVIRONMENTS
 from .sim import Config, Simulation
 
 
+def positive_int(value: str) -> int:
+    n = int(value)
+    if n < 1:
+        raise argparse.ArgumentTypeError(f"must be a positive integer, got {value}")
+    return n
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="slamscope",
@@ -21,8 +28,8 @@ def build_parser() -> argparse.ArgumentParser:
         "environment", nargs="?", default="office", choices=sorted(ENVIRONMENTS),
         help="which world to drive around (default: office)",
     )
-    p.add_argument("-n", "--particles", type=int, default=600, help="particle count")
-    p.add_argument("-b", "--beams", type=int, default=32, help="lidar beams per scan")
+    p.add_argument("-n", "--particles", type=positive_int, default=600, help="particle count")
+    p.add_argument("-b", "--beams", type=positive_int, default=32, help="lidar beams per scan")
     p.add_argument("--range", type=float, default=8.0, help="lidar max range in metres")
     p.add_argument(
         "-g", "--global", dest="global_localization", action="store_true",
