@@ -54,6 +54,25 @@ slamscope --list
 | `F` / `X` | Faster / slower |
 | `Ctrl+Q` | Quit |
 
+### Rerun viewer
+
+[`examples/rerun_viewer.py`](examples/rerun_viewer.py) streams a run into
+[Rerun](https://rerun.io): the true world, the map being built, the particle
+cloud, true / dead-reckoned / MCL paths, lidar beams, and the error curves, all
+on one scrubbable timeline.
+
+![slamscope in Rerun](docs/rerun.jpg)
+
+Global localization in the office, seed 3: the particle cloud collapses onto
+the robot within a few steps, while dead reckoning (red) drifts off the map.
+
+```bash
+pip install rerun-sdk
+python examples/rerun_viewer.py                           # opens the viewer
+python examples/rerun_viewer.py office --global --seed 3  # global localization
+python examples/rerun_viewer.py --save run.rrd            # write a recording instead
+```
+
 ## Results
 
 Median over 8 seeds, 300 steps, 500 particles, pose tracking:
