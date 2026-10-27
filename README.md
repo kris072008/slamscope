@@ -73,6 +73,22 @@ python examples/rerun_viewer.py office --global --seed 3  # global localization
 python examples/rerun_viewer.py --save run.rrd            # write a recording instead
 ```
 
+### Foxglove (MCAP)
+
+[`examples/foxglove_mcap.py`](examples/foxglove_mcap.py) records a run to an
+MCAP file using standard Foxglove schemas: `Grid` for the true and built maps,
+`PosesInFrame` for the particle cloud, `PoseInFrame` for the true / MCL /
+odometry poses, `LaserScan` for the lidar, `SceneUpdate` for the trails, and a
+JSON `/metrics` topic for plotting.
+
+```bash
+pip install foxglove-sdk
+python examples/foxglove_mcap.py office --global --seed 3 -o global.mcap
+```
+
+Open the file in [Foxglove](https://app.foxglove.dev), add a 3D panel (fixed
+frame `world`) and a Plot panel on `/metrics.mcl_error_m` and `/metrics.odom_error_m`.
+
 ## Results
 
 Median over 8 seeds, 300 steps, 500 particles, pose tracking:
